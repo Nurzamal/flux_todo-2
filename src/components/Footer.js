@@ -1,20 +1,21 @@
 import React from 'react'
 
-export function Footer(props) {
-    return (
-        <div>
-            <footer id="footer">
-                <div>
-                    <button id="btn-all" onClick={() => props.onGetTodos()}>
-                        Get todos from API
-                    </button>
+class App extends React.Component {
+  constructor(props) {
+    super(props);
 
-                </div>
-                <div id="items">
-                </div>
-            </footer>
-        </div>
-    );
+   handleClick = (e) => {
+  this.setState({ clickedSubmit: e.target.id },() => {
+    console.log(this.state.clickedSubmit)
+  });
 }
 
-export default Footer;
+//in the render
+  render() {
+    return (
+      <div>
+        <button id="formSubmit" className="btn-all" name="submitButton" onClick={this.handleClick}> Get todos from API</button>
+      </div>
+    );
+  }
+}
