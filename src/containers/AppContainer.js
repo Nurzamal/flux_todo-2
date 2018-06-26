@@ -1,18 +1,70 @@
-import AppView          from '../views/AppView';
+import React from 'react'
 import { Container }    from 'flux/utils';
+import TodoAdd from '../components/TodoAdd'
+import TodoList from "../components/TodoList";
 import TodoStore        from '../data/TodoStore';
 import TodoActions      from '../data/TodoActions';
 
-function getStores() {
-  return [ TodoStore ];
-}
+let descripton = "";
+export default class Todos extends React.Component {
+    constructor() {
+        super();
+        this.state = {
+            todos: TodoStore.getAll()
+        };
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleDeleteTodo = this.handleDeleteTodo.bind(this);
 
-function getState() {
-  return {
-    todos:           TodoStore.getState(),
-    onCreateTodo:    TodoActions.addTodo,
-    onDeleteTodo:    TodoActions.deleteTodo,
-    onGetTodos:      TodoActions.getApiTodos,
-  };
+
+    }
+
+    async componentDidMount() { // is performed when the component is loaded
+        await TodoAction.getApiTodos()
+    }
+
+    async componentWillMount() { // Слушает не случилось ли изменений.
+        await TodoStore.on("change", () => {
+            this.setState({
+                todos: TodoStore.getAll(),  // Предоставляет текущее данные
+            })
+        });
+        TodoStore.on("deleted", () => {
+            this.setState({
+                todos: TodoStore.receiveAll(),  // Предоставляет данные из БД
+            })
+        });
+        this.setState = ({
+            todos: await TodoStore.receiveAll(),
+        });
+
+    }
+
+    handleChange = (event) => { // is change when the client inputing
+        descripton = event.target.value;
+    };
+
+    handleDeleteTodo(event) { // is remove task 
+        TodoAction.deleteTodo(event);
+    }
+
+    handleSubmit(event) { // is sending data to store
+        event.preventDefault;
+        if (!descripton.length) {
+            return 403
+        }
+        else {
+            TodoAction.addTodo(descripton)
+        }
+    };
+
+    render() {
+        const { todos } = this.state
+        return (
+            <div>
+                <TodoAdd addTodo={this.handleSubmit} input_change={this.handleChange} />
+                <TodoList todos={todos} deleteTodo={this.handleDeleteTodo} />
+            </div>
+        );
+    }
 }
-export default Container.createFunctional(AppView, getStores, getState);
