@@ -10,7 +10,7 @@ export default class TodoList extends React.Component{
                 {todos.map((todo) =>
                     <li key={todo.task_id} className="list-group-item">
                         {todo.description}
-                        <button type="button" className="close right" aria-label="Close"
+                        <button type="button" className="close right" aria-label="delete"
                                 onClick={() => this.props.deleteTodo(todo.task_id)}>
                             <span aria-hidden="true">&times;</span>
                         </button>
