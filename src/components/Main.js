@@ -6,15 +6,15 @@ export default class Main extends React.Component {
         super(props);
     }
 
-    deleteTodo = (todoId) => {
-        this.props.onDeleteTodo(todoId)
+    deleteTodo = (e) => {
+        this.props.onDeleteTodo(e.target.id)
     }
 
     renderList = () => {
         return this.props.todos.valueSeq().reverse().map(todo => (
-            <li key={todo.id}>
+            <li id={todo.id}>
                 <span>{todo.text}</span>
-                <button id="btn" onClick={() => this.deleteTodo(todo.id)}>Delete</button>
+                <button id={todo.id} onClick={this.deleteTodo}>Delete</button>
             </li>
         ))
     }
