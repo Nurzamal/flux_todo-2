@@ -1,70 +1,89 @@
-import React from 'react'
-import { Container }    from 'flux/utils';
-import TodoAdd from '../components/TodoAdd'
-import TodoList from "../components/TodoList";
-import TodoStore        from '../data/TodoStore';
-import TodoActions      from '../data/TodoActions';
-
-let descripton = "";
-export default class Todos extends React.Component {
-    constructor() {
-        super();
-        this.state = {
-            todos: TodoStore.getAll()
-        };
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleDeleteTodo = this.handleDeleteTodo.bind(this);
+import React from 'react';
+import Header from '../components/Header';
+import Main from '../components/Main';
+import Footer from '../components/Footer';
 
 
-    }
-
-    async componentDidMount() { // is performed when the component is loaded
-        await TodoAction.getApiTodos()
-    }
-
-    async componentWillMount() { // Слушает не случилось ли изменений.
-        await TodoStore.on("change", () => {
-            this.setState({
-                todos: TodoStore.getAll(),  // Предоставляет текущее данные
-            })
-        });
-        TodoStore.on("deleted", () => {
-            this.setState({
-                todos: TodoStore.receiveAll(),  // Предоставляет данные из БД
-            })
-        });
-        this.setState = ({
-            todos: await TodoStore.receiveAll(),
-        });
-
-    }
-
-    handleChange = (event) => { // is change when the client inputing
-        descripton = event.target.value;
-    };
-
-    handleDeleteTodo(event) { // is remove task 
-        TodoAction.deleteTodo(event);
-    }
-
-    handleSubmit(event) { // is sending data to store
-        event.preventDefault;
-        if (!descripton.length) {
-            return 403
-        }
-        else {
-            TodoAction.addTodo(descripton)
-        }
-    };
-
-    render() {
-        const { todos } = this.state
-        return (
-            <div>
-                <TodoAdd addTodo={this.handleSubmit} input_change={this.handleChange} />
-                <TodoList todos={todos} deleteTodo={this.handleDeleteTodo} />
-            </div>
-        );
-    }
+export default function App(props) {
+  return (
+    <div>
+      <Header {...props} />
+      <Main   {...props} />
+      <Footer {...props} />
+    </div>
+  );
 }
+
+/* export function Header(props) {
+  let input
+  return (
+    <header id="header">
+      <h1>To Do list</h1>
+      <form onSubmit={function(e){
+          e.preventDefault()
+          props.onCreateTodo(input.value)
+           input.value = ''
+        }}>
+        <input
+          ref={node => {
+            input = node
+          }}
+        />
+          <button type="submit"> Add Todo </button>
+      </form>
+    </header>
+  );
+} */
+
+/* export function Main(props) {
+  return (
+    <section id="main">
+      <ul id="todos">
+        {props.todos.valueSeq().reverse().map(todo => {
+          return (
+            <li key={todo.id}>
+                <span>{todo.text}</span>
+              <button id="btn" onClick={function(e){
+                  e.preventDefault()
+                  props.onDeleteTodo(todo.id)
+                }}>
+                delete
+              </button>
+            </li>
+          )
+        })
+      }
+      </ul>
+
+        <button id="btn1" onClick={function(e){
+            e.preventDefault()
+            props.onGetTodos()
+        }}>
+            Get todos from API
+        </button>
+
+    </section>
+  );
+} */
+
+/* export function Footer(props) {
+  const remaining = props.todos.size;
+  const phrase = remaining === 1 ? ' more job left' : ' more jobs left';
+
+  const handleEvent = () => {
+    props.onGetTodos();
+  }
+
+  return (
+    <footer id="footer">
+      <div>
+        <button id="btn-all" onClick={handleEvent}>
+          {'Get Todos from Api'}
+        </button>
+      </div>
+      <div id="items">
+        <strong> {remaining} </strong> {phrase}
+      </div>
+    </footer>
+  );
+} */
