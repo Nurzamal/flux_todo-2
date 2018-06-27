@@ -16,3 +16,10 @@ $ json-server --watch src/db.json --port 3001
 ```sh
 $ npm start
 ```
+
+### This project uses the Flux architecture
+
+In a minimal version, the Flux architecture can contain three layers interacting in order:
+- Actions
+- Stores
+- Views
